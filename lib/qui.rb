@@ -2,7 +2,6 @@
 require "active_record"
 
 #classes
-require "qui/version"
 require "qui/base"
 require "qui/user"
 require "qui/agent"
