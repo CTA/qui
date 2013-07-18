@@ -3,9 +3,9 @@ require "active_record"
 
 #classes
 require "qui/version"
-require "qui/queuemetrics"
-require "qui/queuemetrics_user"
-require "qui/queuemetrics_agent"
-require "qui/queuemetrics_queue"
+require "qui/base"
+require "qui/user"
+require "qui/agent"
+require "qui/queue"
 
 module Qui end

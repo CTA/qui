@@ -20,23 +20,23 @@ Or install it yourself as:
 
 First, connect to your Queuemetrics database:
 
-    Queuemetrics.new("192.168.1.100","username","password")
+    Qui::Base.new("192.168.1.100","username","password")
     
 Then simply create users, agents and queues using QueuemetricsAgent, QueuemetricsUser, and QueuemetricsQueue - all inhereit from ActiveRecord::Base.
 
 User:
 
-    u = QueuemetricsUser.new(login: "Agent/5555", password: "superSECRET", real_name: "Robert Weathers", classe: 4)
+    u = Qui::User.new(login: "Agent/5555", password: "superSECRET", real_name: "Robert Weathers", classe: 4)
     u.save
     
 Agent:
 
-    a = QueuemetricsAgent.new(agent_name: "Agent/5555", agent_description: "rweathers", supervised_by: "Mr. Smith")
+    a = Qui::Agent.new(agent_name: "Agent/5555", agent_description: "rweathers", supervised_by: "Mr. Smith")
     a.save
 
 You can add queues using ActiveRecord, but can also add or remove agents from queues like below:
 
-    q = QueuemetricsQueue.first
+    q = Qui::Queue.first
     q.add_agent!("Agent/5555")
     q.remove_agent!("Agent/4445")
 
