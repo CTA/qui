@@ -20,7 +20,7 @@ Or install it yourself as:
 
 First, connect to your Queuemetrics database:
 
-    Qui::Base.new("192.168.1.100","username","password")
+    Qui::Base.establish_connection("192.168.1.100","username","password")
     
 Then simply create users, agents and queues using QueuemetricsAgent, QueuemetricsUser, and QueuemetricsQueue - all inhereit from ActiveRecord::Base.
 
