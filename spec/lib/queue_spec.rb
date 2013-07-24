@@ -10,9 +10,7 @@ describe Qui::Queue do
   end
 
   it "should wrap ActiveRecord" do
-    # @q = YAML::load_file(File.join(__dir__, 'config.yml'))
-    # Qui::Base.establish_connection(@q["host"], @q["username"], @q["password"])
-    Qui::Queue.superclass.should == ActiveRecord::Base
+    Qui::Queue.ancestors.should include ActiveRecord::Base
   end
 
   describe ".add_agent!" do
