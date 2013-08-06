@@ -1,5 +1,6 @@
 module Qui
   class Agent < ActiveRecord::Base
+    attr_accessible :supervised_by, :nome_agente, :descr_agente, :location, :aliases, :group_by, :sys_dt_creazione, :current_terminal, :xmpp_address, :payroll_code, :chiave_agente, :sys_dt_modifica
     self.table_name = 'agenti_noti'
 
     def initialize(options={})

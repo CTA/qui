@@ -1,5 +1,6 @@
 module Qui
   class User < ActiveRecord::Base
+    attr_accessible :login, :real_name, :classe, :PASSWORD, :abilitato, :masterkey, :n_logon, :chiavi_utente, :ultimo_logon, :sys_dt_creazione, :sys_dt_modifica
     self.table_name = 'arch_users'
     
     def initialize(options={})
