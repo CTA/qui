@@ -3,6 +3,7 @@ module Qui
     self.table_name = 'arch_users'
     
     def initialize(options={})
+      ActiveRecord::Base.establish_connection 'queuemetrics'
       if options then 
         super set_defaults(options) 
       else

@@ -1,11 +1,3 @@
-# coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'qui/base'
-require 'qui/agent'
-require 'qui/user'
-require 'qui/queue'
-
 Gem::Specification.new do |spec|
   spec.name          = "qui"
   spec.version       = "0.8.6"

@@ -4,18 +4,18 @@ module Qui
   class Base
 
     def self.establish_connection(host, username, password)
-      connection = {
+      ActiveRecord::Base.configurations['queuemetrics'] = {
         :adapter 	=> "mysql2",
         :host 		=> host,
         :database => "queuemetrics",
         :username => username,
         :password => password,
       }
-      ActiveRecord::Base.establish_connection connection
+      ActiveRecord::Base.establish_connection 'queuemetrics'
     end
 
     def self.close_connection
-      ActiveRecord::Base.connection.close
+      ActiveRecord::Base.connection('queuemetrics').close
     end
 
   end
