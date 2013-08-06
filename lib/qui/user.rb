@@ -13,13 +13,15 @@ module Qui
     private
 
       def set_defaults(options)
+        options[:PASSWORD] ||= options.delete(:password)
         options[:abilitato] = "1"
         options[:masterkey] = "0"
         options[:n_logon]  = "0"
         options[:chiavi_utente] = " "
-        options[:ultimo_logon] = Time.now.to_s(:db)
-        options[:sys_dt_creazione] = Time.now.to_s(:db)
-        options[:sys_dt_modifica] = Time.now.to_s(:db)
+        options[:ultimo_logon] = Time.now
+        options[:sys_dt_creazione] = Time.now
+        options[:sys_dt_modifica] = Time.now
+        return options
       end
 
   end

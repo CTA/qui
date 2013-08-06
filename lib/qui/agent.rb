@@ -22,6 +22,7 @@ module Qui
       options[:payroll_code] = " "
       options[:chiave_agente] = " "
       options[:sys_dt_modifica] = Time.now.to_s(:db)
+      return options
     end
 
   end
