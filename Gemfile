@@ -1,9 +1,9 @@
 source 'https://rubygems.org'
 
 #dependencies
-gem "activerecord"
+gem "activerecord", '~> 3.2'
 gem "mysql2"
-gem "protected_attributes"
+# gem "protected_attributes"
 
 #testing
 gem "rspec"
