@@ -4,7 +4,6 @@ module Qui
     self.table_name = 'arch_users'
     
     def initialize(options={})
-      ActiveRecord::Base.establish_connection 'queuemetrics'
       if options then 
         super set_defaults(options) 
       else
@@ -12,8 +11,11 @@ module Qui
       end
     end
 
-    private
+    def self.use_existing_connection connection
+      establish_connection connection
+    end
 
+    private
       def set_defaults(options)
         options[:PASSWORD] ||= options.delete(:password)
         options[:abilitato] = "1"
@@ -25,6 +27,5 @@ module Qui
         options[:sys_dt_modifica] = Time.now
         return options
       end
-
   end
 end
