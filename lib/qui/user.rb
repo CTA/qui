@@ -4,11 +4,7 @@ module Qui
     self.table_name = 'arch_users'
     
     def initialize(options={})
-      if options then 
-        super set_defaults(options) 
-      else
-        super
-      end
+      super set_defaults(options) 
     end
 
     def self.use_existing_connection connection
