@@ -2,35 +2,28 @@ module Qui
   class Queue < ActiveRecord::Base
     self.table_name = 'code_possibili'
 
-    def initialize(options={}) 
-      super(options) 
-    end
-
     def add_agent!(userid)
-      if exists_in_queue?(userid) then
-        false
-      else
-        self.agenti_membri += "|#{userid}"
-        self.save
+      unless exists_in_queue?(userid)
+        update_attributes agenti_membri: agenti_membri + "|#{userid}"
       end
     end
 
     def remove_agent!(userid)
-      if exists_in_queue?(userid) then 
-        members = self.agenti_membri.split("|")
-        members.delete userid
-        self.agenti_membri = members.join("|")
-        self.save
-      else
-        false
-      end
+      update_attributes agenti_membri: members.reject { |x| x == userid }
+        .join(?|) if exists_in_queue?(userid)
+    end
+
+    def members
+      agenti_membri.split ?|
+    end
+
+    def self.find_by_code(queue_code)
+      where(composizione_coda: queue_code).first
     end
 
     private
-
-    def exists_in_queue?(userid)
-      if self.agenti_membri.include?(userid) then true else false end
-    end
-
+      def exists_in_queue?(userid)
+        self.agenti_membri.include?(userid)
+      end
   end
 end

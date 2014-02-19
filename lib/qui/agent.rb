@@ -1,30 +1,35 @@
 module Qui
   class Agent < ActiveRecord::Base
-    attr_accessible :supervised_by, :nome_agente, :descr_agente, :location, :aliases, :group_by, :sys_dt_creazione, :current_terminal, :xmpp_address, :payroll_code, :chiave_agente, :sys_dt_modifica
     self.table_name = 'agenti_noti'
 
     def initialize(options={})
       super set_defaults(options)
     end
-
-    def self.use_existing_connection connection
-      establish_connection connection
-    end
     
     private
       def set_defaults(options)
-        if options[:agent_name] then options[:nome_agente] = options.delete(:agent_name) end
-        if options[:agent_description] then options[:descr_agente] = options.delete(:agent_description) end
-        options[:location] = 3
-        options[:aliases] = ""
-        options[:group_by] = 1
-        options[:sys_dt_creazione] = Time.now.to_s(:db)
-        options[:current_terminal] = " "
-        options[:xmpp_address] = " "
-        options[:payroll_code] = " "
-        options[:chiave_agente] = " "
-        options[:sys_dt_modifica] = Time.now.to_s(:db)
-        return options
+        result = {}
+        options.each do |key, value|
+          result.merge! key.to_s => value
+        end
+        result['nome_agente'] ||= result.delete('agent_name')
+        result['descr_agente'] ||= result.delete('agent_description')
+        default_options.merge result
+      end
+
+      def default_options
+        meow = Time.now.to_s(:db)
+        {
+          'location' => 3,
+          'aliases' => "",
+          'group_by' => 1,
+          'current_terminal' => " ",
+          'xmpp_address' => " ",
+          'payroll_code' => " ",
+          'chiave_agente' => " ",
+          'sys_dt_creazione' => meow,
+          'sys_dt_modifica' => meow
+        }
       end
   end
 end

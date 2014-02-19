@@ -1,55 +1,88 @@
 require 'spec_helper'
-require 'qui/base'
-require 'qui/queue'
 
 describe Qui::Queue do
+  include_context 'ActiveRecord subclass'
 
-  before do
-    @queue = Qui::Queue.first
-    @userid = 'agent/128461849'
+  subject { Qui::Queue.new(info) }
+  let(:userid) { 'agent/128461849' }
+  let(:info) { {
+    composizione_coda: 'hello',
+    agenti_membri: 'agent/001|agent/002',
+    agenti_spilloff_1: 'hello',
+    agenti_spilloff_2: 'hello',
+    report_to: 'hello',
+    chat_group: 'hello',
+    agaw_lookback_min: 19,
+    agaw_enabled: 4,
+    queue_url: 'hello',
+    sys_dt_creazione: Time.now,
+    sys_dt_modifica: Time.now
+  } }
+
+  it 'should set the table name' do
+    Qui::Queue.table_name.should eq 'code_possibili'
   end
 
-  it "should wrap ActiveRecord" do
-    Qui::Queue.ancestors.should include ActiveRecord::Base
-  end
+  describe '.add_agent!' do
+    context 'agent exists in queue' do
+      before { subject.agenti_membri += "|#{userid}" }
 
-  describe ".add_agent!" do
-    before do
-      @members = @queue.agenti_membri
-    end
-    
-    it "should add an agent to a queue object." do
-      @members.should_not include(@userid)
-      @queue.add_agent!(@userid)
-      @queue.agenti_membri.should include(@userid)
+      it { subject.add_agent!(userid).should be_nil }
     end
 
-    after do #return queue to prior state
-      @queue.agenti_membri = @members
-      @queue.save
-    end
-  end
-
-  describe ".remove_agent!" do
-    before do
-      @members = @queue.agenti_membri
-      @queue.agenti_membri = @members += "|#{@userid}"
-    end
-    
-    it "should remove an agent from a queue object." do
-      @queue.agenti_membri.should include(@userid)
-      @queue.remove_agent!(@userid)
-      @queue.agenti_membri.should_not include(@userid)
-    end
-
-    after do
-      if @queue.agenti_membri.include?(@userid)
-        members = @queue.agenti_membri.split("|")
-        members.delete @userid
-        @queue.agenti_membri = members.join("|")
-        @queue.save
+    context 'agent not in queue' do
+      it 'should add an agent to a queue object' do
+        subject.agenti_membri.should_not include(userid)
+        subject.add_agent!(userid)
+        subject.agenti_membri.should include(userid)
       end
     end
   end
 
+  describe '.remove_agent!' do
+    context 'agent exists in queue' do
+      before { subject.agenti_membri += "|#{userid}" }
+
+      it 'should remove an agent from a queue object.' do
+        subject.agenti_membri.should include(userid)
+        subject.remove_agent!(userid)
+        subject.agenti_membri.should_not include(userid)
+      end
+    end
+
+    context 'agent not in queue' do
+      it { subject.remove_agent!(userid).should be_nil }
+    end
+  end
+
+  describe '.members' do
+    it { subject.members.should be_an(Array) }
+
+    it 'should return all members' do
+      subject.members.should eq %w[agent/001 agent/002]
+    end
+
+    context 'no members in queue' do
+      before(:each) { subject.update_attributes agenti_membri: '' }
+
+      it 'should return an empty array' do
+        subject.members.should eq []
+      end
+    end
+  end
+
+  describe '#find_by_code' do
+    context 'given an existing queue_code' do
+      before(:each) { subject.save }
+
+      it 'should return the corresponding Queue' do
+        Qui::Queue.find_by_code(subject.composizione_coda)
+          .should eq subject
+      end
+    end
+
+    context 'given a queue_code that does not exist' do
+      it { Qui::Queue.find_by_code('foo').should be_nil }
+    end
+  end
 end
