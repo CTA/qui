@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Qui::Base do
   subject { Qui::Base }
 
-  before(:all) { @config = YAML::load_file(File.join(__dir__, 'config.yml')) }
+  before(:all) { @config = YAML::load_file(File.join(__dir__, '../config.yml')) }
   before(:all) { Qui::Base.establish_connection(@config) }
   let(:expected_config) { { 'adapter' => 'mysql2' }.merge(@config) }
 
