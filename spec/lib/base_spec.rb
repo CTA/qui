@@ -1,29 +1,28 @@
 require 'spec_helper'
-require 'yaml'
-require 'qui/base'
-require 'qui/agent'
-require 'active_record'
 
 describe Qui::Base do
+  subject { Qui::Base }
 
-  before do
-    @q = YAML::load_file(File.join(__dir__, 'config.yml'))
-  end
+  before(:all) { @config = YAML::load_file(File.join(__dir__, '../config.yml')) }
+  before(:all) { Qui::Base.establish_connection(@config) }
+  let(:expected_config) { { 'adapter' => 'mysql2' }.merge(@config) }
 
-  #connected? returns opposite bool
-  describe ".establish_connection" do
-    it "establishes a connection to a Queuemetrics database." do
-      Qui::Base.establish_connection(@q["host"], @q["username"], @q["password"])
-      ActiveRecord::Base.connected?.should be_false
-      ActiveRecord::Base.connection.current_database.should eq("queuemetrics")
+  describe '.establish_connection' do
+    it 'sets up the "queuemetrics" configuration' do
+      ActiveRecord::Base.configurations['queuemetrics'].should eq expected_config
+    end
+
+    it 'establishes a connection to a Queuemetrics database.' do
+      subject.establish_connection(@config)
+      ActiveRecord::Base.connection.current_database
+        .should eq @config['database']
     end
   end
 
-  describe ".close_connection" do
-    it "closes a connection to the Queuemetrics database." do
-      Qui::Base.close_connection
-      ActiveRecord::Base.connected?.should be_true
+  describe '.close_connection' do
+    it 'closes a connection to the Queuemetrics database.' do
+      ActiveRecord::Base.connection.should_receive(:close)
+      subject.close_connection
     end
   end
-
 end

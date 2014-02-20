@@ -1,27 +1,33 @@
 module Qui
   class User < ActiveRecord::Base
-    attr_accessible :login, :real_name, :classe, :PASSWORD, :abilitato, :masterkey, :n_logon, :chiavi_utente, :ultimo_logon, :sys_dt_creazione, :sys_dt_modifica
+    alias_attribute :password, :PASSWORD
     self.table_name = 'arch_users'
-    
+
     def initialize(options={})
       super set_defaults(options) 
     end
 
-    def self.use_existing_connection connection
-      establish_connection connection
-    end
-
     private
       def set_defaults(options)
-        options[:PASSWORD] ||= options.delete(:password)
-        options[:abilitato] = "1"
-        options[:masterkey] = "0"
-        options[:n_logon]  = "0"
-        options[:chiavi_utente] = " "
-        options[:ultimo_logon] = Time.now
-        options[:sys_dt_creazione] = Time.now
-        options[:sys_dt_modifica] = Time.now
-        return options
+        result = {}
+        options.each do |key, value|
+          result.merge! key.to_s => value
+        end
+        result['PASSWORD'] ||= result.delete('password')
+        default_options.merge result
+      end
+
+      def default_options
+        meow = Time.now
+        {
+          'abilitato' => "1",
+          'masterkey' => "0",
+          'n_logon'  => "0",
+          'chiavi_utente' => " ",
+          'ultimo_logon' => meow,
+          'sys_dt_creazione' => meow,
+          'sys_dt_modifica' => meow
+        }
       end
   end
 end

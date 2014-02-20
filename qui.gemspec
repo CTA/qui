@@ -1,9 +1,9 @@
 Gem::Specification.new do |spec|
   spec.name          = "qui"
-  spec.version       = "0.8.6"
-  spec.authors       = ["Kevin Collette"]
+  spec.version       = "1.0.0"
+  spec.authors       = ["Kevin Collette", "JC Wilcox"]
   spec.email         = ["kevcollette@gmail.com"]
-  spec.description   = %q{Qui, or Queuemetrics User Integration, is a gem that creates an ActiveRecord wrapper for manipulating users, agents, and queues within the Queuemetrics calling platform.}
+  spec.description   = %q{Qui, or Queuemetrics User Integration, is a gem that creates an ActiveRecord wrapper for manipulating users, agents, queues, and locations within the Queuemetrics calling platform.}
   spec.summary       = %q{Qui creates and manages Queuemetrics users and queues.}
   spec.homepage      = ""
   spec.license       = "MIT"
