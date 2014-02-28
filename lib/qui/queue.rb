@@ -1,5 +1,6 @@
 module Qui
   class Queue < ActiveRecord::Base
+    attr_accessible :agenti_membri
     self.table_name = 'code_possibili'
 
     def add_agent!(userid)
